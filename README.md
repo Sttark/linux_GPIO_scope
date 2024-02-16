@@ -48,4 +48,7 @@ To integrate with `visualizer.py`, the GPIO library automatically writes state c
 
 This approach decouples the visualization of pin activities from the main GPIO handling logic, allowing developers to monitor GPIO state changes conveniently while focusing on the core functionality of their applications.
 
+#### TODO
+Find a way to switch back a forth between using PWM pins as GPIOs and PWMs. Currently, if you use them as a GPIO through lgpio, they cannot be used as hardware PWM until after rebooting. It seems the kernel is reserving them for one or the other, or lgpio is not releasing them fully.
+
 Contributions to enhance `visualizer.py`, including additional features for visualization and support for more complex GPIO activities, are welcome.
