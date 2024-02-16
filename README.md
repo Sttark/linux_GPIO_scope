@@ -32,7 +32,7 @@ To use this library on a Pi 5 or Jetson board, simply import GPIO and instantiat
 
 ### Visualizer Integration
 
-The `visualizer.py` tool is an independent Python script that provides real-time visualization of GPIO pin activities, similar to the functionality of piscope for earlier Raspberry Pi models. This is particularly useful for debugging and monitoring GPIO applications.
+The `visualizer.py` tool is an independent Python script that provides real-time visualization of GPIO pin activities, similar to the functionality of [PiScope](https://abyz.me.uk/rpi/pigpio/piscope.html) for earlier Raspberry Pi models. This is particularly useful for debugging and monitoring GPIO applications.
 
 #### Creating a Pipe for Pin Activity
 
