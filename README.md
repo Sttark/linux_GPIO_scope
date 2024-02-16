@@ -1,5 +1,5 @@
 # linux_GPIO_scope
-**Linux GPIO Library for Pi 5 and Jetson
+##Linux GPIO Library for Pi 5 and Jetson
 
 This repository provides a GPIO library for the Raspberry Pi 5 and NVIDIA Jetson platforms using the new Linux kernel GPIO userspace API.
 
