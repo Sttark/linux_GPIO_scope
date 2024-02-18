@@ -2,9 +2,9 @@
 
 ## Linux GPIO Library for Pi 5 and Jetson
 
-This repository provides a GPIO library for the Raspberry Pi 5 and NVIDIA Jetson platforms using the new Linux kernel GPIO userspace API.
+This repository provides a GPIO library for the Raspberry Pi 5 and NVIDIA Jetson platforms using the Linux kernel GPIO userspace API.
 
-The Raspberry Pi 5 and Jetson boards use a newer Linux kernel that is incompatible with the pigpio and piscope libraries commonly used for GPIO access in Python on earlier Raspberry Pi models. This library replicates much of the pigpio API and maps it to [lgpio](https://abyz.me.uk/lg/py_lgpio.html) to provide similar GPIO functionality on these newer boards.
+The Raspberry Pi 5 and Jetson boards use a Linux kernel that is incompatible with the pigpio and piscope libraries commonly used for GPIO access in Python on earlier Raspberry Pi models. This library replicates much of the pigpio API and maps it to [lgpio](https://abyz.me.uk/lg/py_lgpio.html) to provide similar GPIO functionality on these newer boards.
 
 ### Key Features
 
