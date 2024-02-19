@@ -2,9 +2,9 @@
 
 ## Linux GPIO Library for Pi 5 and Jetson
 
-This repository provides a GPIO library for the Raspberry Pi 5 and NVIDIA Jetson platforms using the new Linux kernel GPIO userspace API.
+This repository provides a GPIO library for the Raspberry Pi 5 and NVIDIA Jetson platforms using the Linux kernel GPIO userspace API.
 
-The Raspberry Pi 5 and Jetson boards use a newer Linux kernel that is incompatible with the pigpio and piscope libraries commonly used for GPIO access in Python on earlier Raspberry Pi models. This library replicates much of the pigpio API and maps it to [lgpio](https://abyz.me.uk/lg/py_lgpio.html) to provide similar GPIO functionality on these newer boards.
+The Raspberry Pi 5 and Jetson boards use a Linux kernel that is incompatible with the pigpio and piscope libraries commonly used for GPIO access in Python on earlier Raspberry Pi models. This library replicates much of the pigpio API and maps it to [lgpio](https://abyz.me.uk/lg/py_lgpio.html) to provide similar GPIO functionality on these newer boards.
 
 ### Key Features
 
@@ -49,3 +49,8 @@ To integrate with `visualizer.py`, the GPIO library automatically writes state c
 This approach decouples the visualization of pin activities from the main GPIO handling logic, allowing developers to monitor GPIO state changes conveniently while focusing on the core functionality of their applications.
 
 Contributions to enhance `visualizer.py`, including additional features for visualization and support for more complex GPIO activities, are welcome.
+
+#### TODO
+- Find a way to switch back a forth between using PWM pins as GPIOs and PWMs. Currently, if you use them as a GPIO through lgpio, they cannot be used as hardware PWM until after rebooting. It seems the kernel is reserving them for one or the other, or lgpio is not releasing them fully.
+- Test with Jetson
+- Automatically find the correct chipset/PWM channels
