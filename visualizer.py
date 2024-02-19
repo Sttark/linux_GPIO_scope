@@ -150,6 +150,18 @@ class GPIOPlotter(QtWidgets.QWidget):
         self.plots[len(self.plots)-1].setXRange(new_min, current_range[1], padding=0)
         self.xRangeLabel.setText(f'X Range: {self.format_distance(current_range[1] - new_min)}')
 
+    def trimData(self):
+        """Trim the data for each GPIO pin to keep only the last 2000 events."""
+        max_events = 10000  # Maximum number of events to retain
+        for gpio in GPIO_PIN_RANGE:
+            data = gpio_data[gpio]
+            if len(data['timestamps']) > max_events:
+                # Calculate the number of items to remove
+                num_to_remove = len(data['timestamps']) - max_events
+                # Remove the oldest items
+                data['timestamps'] = data['timestamps'][num_to_remove:]
+                data['states'] = data['states'][num_to_remove:]
+
     def updatePlots(self):
         if self.isPaused:
             return  # Skip updating plots if paused
@@ -160,6 +172,9 @@ class GPIOPlotter(QtWidgets.QWidget):
         window_start_ns = current_time_ns - self.range * 1e9  # 10 seconds in nanoseconds
         xRange = self.plots[-1].getViewBox().viewRange()[0]
         self.xRangeLabel.setText(f'X Range: {self.format_distance(xRange[1] - xRange[0])}')
+
+        # Call trim_data here to ensure each GPIO pin's data is trimmed before updating plots
+        self.trimData()
 
         try:
             raw_data = self.pipe.readlines()
