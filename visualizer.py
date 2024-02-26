@@ -294,7 +294,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     mainWin = GPIOPlotter()
     mainWin.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 if __name__ == '__main__':
     main()
