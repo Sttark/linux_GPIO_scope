@@ -2,6 +2,7 @@ import lgpio
 import threading
 import time
 import os
+import atexit
 
 LOG_PIPE_NAME = "log_pipe"
 
@@ -18,12 +19,14 @@ class GPIO:
     RISING_EDGE = lgpio.RISING_EDGE
     FALLING_EDGE = lgpio.FALLING_EDGE
     BOTH_EDGES = lgpio.BOTH_EDGES
+    EITHER_EDGE = lgpio.BOTH_EDGES
 
     def __init__(self, gpiochip=4):
         self.gpiochip = lgpio.gpiochip_open(gpiochip)
         self.callback_threads = {}
         self.stop_threads = False
         self.line_modes = {}
+        self.pwm_channels = {}
         self.pin_activity_logs = []
         self.max_log_size = 10000
         self.log_file = 'pin_activity.log'
@@ -79,7 +82,7 @@ class GPIO:
                 lgpio.gpio_set_debounce_micros(self.gpiochip, gpio, bouncetime)
             lgpio.callback(self.gpiochip, gpio, lgpio.BOTH_EDGES, self.input_callback)
             self.line_modes[gpio] = 'in'
-        else:
+        elif mode == self.OUTPUT:
             # gpio_claim_output(handle, gpio, level=0, lFlags=0)
             lgpio.gpio_claim_output(self.gpiochip, gpio, level, flag)
             self.line_modes[gpio] = 'out'
@@ -110,8 +113,6 @@ class GPIO:
         if self.line_modes.get(gpio) != 'out':
             raise ValueError("GPIO must be in OUTPUT mode to use PWM.")
         lgpio.tx_pwm(self.gpiochip, gpio, frequency, duty_cycle_percentage, pulse_offset=0, pulse_cycles=0)
-        if not hasattr(self, 'pwm_channels'):
-            self.pwm_channels = {}
         self.pwm_channels[gpio] = {'frequency': frequency, 'duty_cycle_percentage': duty_cycle_percentage}
         if frequency > 0:
             self.start_pwm_logging_thread(gpio, frequency, duty_cycle_percentage)
@@ -176,8 +177,6 @@ class GPIO:
 
             with open(f'{channel_path}/enable', 'w') as f:
                 f.write('1')
-        if not hasattr(self, 'pwm_channels'):
-            self.pwm_channels = {}
         self.pwm_channels[gpio] = {'frequency': frequency, 'duty_cycle_percentage': duty_cycle_percentage}
         if frequency > 0:
             self.start_pwm_logging_thread(gpio, frequency, duty_cycle_percentage)
@@ -195,8 +194,6 @@ class GPIO:
             while not self.stop_threads and self.pwm_channels[channel]['frequency'] > 0:
                 self.log_event(channel, 1)
                 time.sleep(high_time_ns / 1e9)
-                if self.stop_threads or self.pwm_channels[channel]['frequency'] == 0:
-                    break
                 self.log_event(channel, 0)
                 time.sleep(low_time_ns / 1e9)
         if channel in self.callback_threads:
@@ -212,5 +209,22 @@ class GPIO:
         if gpio in self.callback_threads:
             if gpio in self.pwm_channels:
                 self.pwm_channels[gpio]['frequency'] = 0
-            self.callback_threads[gpio].join()
             del self.callback_threads[gpio]
+
+    def cleanup(self):
+        self.stop()
+
+    def stop(self):
+        print('GPIO cleanup')
+        self.stop_threads = True
+
+        # Stop hardware PWM for any active channels
+        for gpio in self.pwm_channels:
+            if self.pwm_channels[gpio]['frequency'] > 0: 
+                if gpio in [18, 19]:  # Only for GPIO 18/19
+                    self.hardware_PWM(gpio, 0)  # Set frequency to 0
+
+        lgpio.gpiochip_close(self.gpiochip)
+
+# Register the cleanup function to run at exit
+atexit.register(GPIO().cleanup) 
