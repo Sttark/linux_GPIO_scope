@@ -53,6 +53,12 @@ class GPIOPlotter(QtWidgets.QWidget):
         self.curves = []
         plot_height = 20
         for i in GPIO_PIN_RANGE:
+            # Create a curve with different pen color for every other plot
+            if i % 2 == 0:
+                curve = plot.plot([], [], pen='r', stepMode=True)  # Use red pen color
+            else:
+                curve = plot.plot([], [], pen='y', stepMode=True)  # Use yellow pen color
+            self.curves.append(curve)
             # Create a label for the GPIO pin and add it to the layout
             label = LabelItem(f"GPIO{i}", size='6pt')
             self.plotWidget.addItem(label)
