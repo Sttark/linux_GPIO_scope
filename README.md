@@ -51,6 +51,6 @@ This approach decouples the visualization of pin activities from the main GPIO h
 Contributions to enhance `visualizer.py`, including additional features for visualization and support for more complex GPIO activities, are welcome.
 
 #### TODO
-- Find a way to switch back a forth between using PWM pins as GPIOs and PWMs. Currently, if you use them as a GPIO through lgpio, they cannot be used as hardware PWM until after rebooting. It seems the kernel is reserving them for one or the other, or lgpio is not releasing them fully.
+- Find a way to switch back and forth between using PWM pins as GPIOs and PWMs. Currently, if you use them as a GPIO through lgpio, they cannot be used as hardware PWM until after rebooting. It seems the kernel is reserving them for one or the other, or lgpio is not releasing them fully.
 - Test with Jetson
 - Automatically find the correct chipset/PWM channels
